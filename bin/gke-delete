@@ -1,0 +1,25 @@
+#!/bin/bash
+#
+DIR=$(dirname $0)
+
+source ${DIR}/helpers
+
+usage() {
+  echo "Usage: 
+  ${0} gke_cluster_name
+
+  Deletes GKE Cluster by gcloud container cluster delete gke_cluster_name 
+  
+  gke_cluster_name: can be set also by passing GKE_CLUSTER_NAME env variable
+
+     see gcloud container clusters delete --help
+"
+}
+
+activateServiceAccount
+
+if [[ -z ${GKE_CLUSTER_NAME} ]]; then
+  err "GKE_CLUSTER_NAME is not set"
+fi
+
+gcloud --quiet container cluster delete ${GKE_CLUSTER_NAME}

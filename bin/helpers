@@ -1,0 +1,9 @@
+#!/bin/bash
+# 
+msg() { echo -e "\e[32mINFO ---> $1\e[0m"; }
+err() { echo -e "\e[31mERR ---> $1\e[0m" ; exit 1; }
+
+activateServiceAccount() {
+	[[ -z "$GOOGLE_SERVICE_ACCOUNT_KEY" ]] && err "Please set the service-account env var!"
+	gcloud auth activate-service-account --key-file <<<$(echo $GOOGLE_SERVICE_ACCOUNT_KEY)
+}
