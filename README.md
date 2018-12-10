@@ -5,18 +5,18 @@ Use Codefresh GKE plugin to create GKE Kubernetes cluster for integration tests
 
 ## codefresh/plugin-gke Docker Image details
 
-Requirements:
+### Requirements:
   set GOOGLE_SERVICE_ACCOUNT_KEY to the Google Service Account Key value
   Service account should have enough permissions to create and operate GKE Cluster:
     Kubernetes Engine Admin or subset of privileges from GKE Developer+clusterAdmin  
 
-Environements:
+### Environements:
   - GOOGLE_SERVICE_ACCOUNT_KEY - Google Service Account Key value
   - GKE_CLUSTER_NAME - name of gke cluster to create  
   
   - Codefresh variables: https://docs.codefresh.io/docs/variables
 
-Commands: 
+### Commands: 
 
 * `gke-create` - creates GKE cluster on Google Cloud project defined by GOOGLE_SERVICE_ACCOUNT_KEY
   - `gcloud container clusters create <GKE_CLUSTER_NAME> <optional parameters>`
@@ -58,8 +58,3 @@ steps:
   ...
 
 ```
-## Environment Variables
-
-- DOCKER_MACHINE_NAME
-- Codefresh variables: https://docs.codefresh.io/docs/variables
-- docker-machine drivers envs: https://docs.docker.com/machine/drivers/
