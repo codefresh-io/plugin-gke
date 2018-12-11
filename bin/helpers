@@ -5,5 +5,49 @@ err() { echo -e "\e[31mERR ---> $1\e[0m" ; exit 1; }
 
 activateServiceAccount() {
 	[[ -z "$GOOGLE_SERVICE_ACCOUNT_KEY" ]] && err "Please set the service-account env var!"
-	gcloud auth activate-service-account --key-file <<<$(echo $GOOGLE_SERVICE_ACCOUNT_KEY)
+    
+	export CLOUDSDK_CORE_PROJECT=$(jq -r '.project_id' <(echo $GOOGLE_SERVICE_ACCOUNT_KEY) )
+    [[ -z "$CLOUDSDK_CORE_PROJECT" ]] && err "Cannot get project_id - invalid GOOGLE_SERVICE_ACCOUNT_KEY"
+	gcloud config set project $CLOUDSDK_CORE_PROJECT
+	
+	gcloud auth activate-service-account --key-file <(echo $GOOGLE_SERVICE_ACCOUNT_KEY)	
+	if [[ $? != 0 ]]; then
+       err "Cannot authenticate to Google cloud with given GOOGLE_SERVICE_ACCOUNT_KEY"
+	fi
+}
+
+generateKubeconfig() {
+  GKE_CLUSTER_NAME=${1:-$GKE_CLUSTER_NAME}
+  JQ_QUERY='{
+        "apiVersion": "v1",
+		"kind": "Config",
+        "clusters": [{
+		    "name": .name ,
+            "cluster": {
+			  "certificate-authority-data": .masterAuth.clusterCaCertificate ,
+			  "server": ("https://" + .endpoint)
+		    }
+	    }],
+        "contexts": [
+            {
+                "context": {
+                    "cluster": .name,
+                    "user": ( .name + "-admin" )
+                },
+                "name": .name
+            }
+        ],
+		"current-context": .name,
+		"users": [
+            {
+                "name": ( .name + "-admin" ),
+				"user": {
+					"client-certificate-data": .masterAuth.clientCertificate , 
+					"client-key-data": .masterAuth.clientKey 
+				}
+			}
+		]
+    }'
+
+	gcloud container clusters describe --project=codefresh-load --project=$CLOUDSDK_CORE_PROJECT $GKE_CLUSTER_NAME --format=json | jq -r "$JQ_QUERY"
 }

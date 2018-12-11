@@ -56,3 +56,17 @@ echo "GKE_CLUSTER_NAME=${GKE_CLUSTER_NAME}"
 cf_export GKE_CLUSTER_NAME
 
 gcloud --quiet container clusters create ${GKE_CLUSTER_NAME} $@
+if [[ $? != 0 ]]; then
+      err "Failed to create cluster $GKE_CLUSTER_NAME"
+fi
+
+KUBECONFIG_DIR=/codefresh/volume/.kube
+mkdir -p $KUBECONFIG_DIR
+export KUBECONFIG=${KUBECONFIG_DIR}/${GKE_CLUSTER_NAME}-config
+
+generateKubeconfig > ${KUBECONFIG_DIR}/${GKE_CLUSTER_NAME}-config
+if [[ $? != 0 ]]; then
+      err "Failed to get kubeconfig for cluster $GKE_CLUSTER_NAME"
+fi
+
+cf_export KUBECONFIG

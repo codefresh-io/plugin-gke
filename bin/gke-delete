@@ -23,3 +23,8 @@ if [[ -z ${GKE_CLUSTER_NAME} ]]; then
 fi
 
 gcloud --quiet container cluster delete ${GKE_CLUSTER_NAME}
+if [[ $? != 0 ]]; then
+  err "Failed create cluster"
+fi
+
+echo "Getting kubeconfig"
