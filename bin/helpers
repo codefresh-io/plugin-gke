@@ -14,6 +14,16 @@ activateServiceAccount() {
 	if [[ $? != 0 ]]; then
        err "Cannot authenticate to Google cloud with given GOOGLE_SERVICE_ACCOUNT_KEY"
 	fi
+
+	if [[ -z "${CLOUDSDK_COMPUTE_ZONE}" && -z "${CLOUDSDK_COMPUTE_REGION}" ]]; then
+	   DEFAULT_REGION=us-central1
+	   msg "setting CLOUDSDK_COMPUTE_REGION=$DEFAULT_REGION because neither CLOUDSDK_COMPUTE_ZONE nor CLOUDSDK_COMPUTE_REGION are set"
+	   gcloud config set compute.region=$DEFAULT_REGION
+	   export CLOUDSDK_COMPUTE_REGION=$DEFAULT_REGION
+	fi
+	msg "CLOUDSDK_COMPUTE_REGIONS=${CLOUDSDK_COMPUTE_REGION}"
+	msg "CLOUDSDK_COMPUTE_ZONE=${CLOUDSDK_COMPUTE_ZONE}"
+
 }
 
 generateKubeconfig() {
@@ -49,5 +59,5 @@ generateKubeconfig() {
 		]
     }'
 
-	gcloud container clusters describe --project=codefresh-load --project=$CLOUDSDK_CORE_PROJECT $GKE_CLUSTER_NAME --format=json | jq -r "$JQ_QUERY"
+	gcloud container clusters describe $GKE_CLUSTER_NAME --format=json | jq -r "$JQ_QUERY"
 }

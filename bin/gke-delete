@@ -6,7 +6,7 @@ source ${DIR}/helpers
 
 usage() {
   echo "Usage: 
-  ${0} gke_cluster_name --zone|--region
+  ${0} gke_cluster_name 
 
   Deletes GKE Cluster by gcloud container cluster delete gke_cluster_name 
   

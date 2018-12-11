@@ -11,7 +11,11 @@ Use Codefresh GKE plugin to create GKE Kubernetes cluster for integration tests
     Kubernetes Engine Admin or subset of privileges from GKE Developer+clusterAdmin  
 
 ### Environements:
-  - GOOGLE_SERVICE_ACCOUNT_KEY - Google Service Account Key value
+  - GOOGLE_SERVICE_ACCOUNT_KEY - Google Service Account Key value, mandatory
+
+  - CLOUDSDK_COMPUTE_ZONE - one of valid Google Compute zones - see https://cloud.google.com/compute/docs/regions-zones/
+  - CLOUDSDK_COMPUTE_REGION - one of valid Google Compute regions. If both CLOUDSDK_COMPUTE_ZONE and CLOUDSDK_COMPUTE_REGION are not set, default is us-central1
+  
   - GKE_CLUSTER_NAME - name of gke cluster to create  
   
   - Codefresh variables: https://docs.codefresh.io/docs/variables

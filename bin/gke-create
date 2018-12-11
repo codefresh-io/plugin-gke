@@ -6,7 +6,7 @@ source ${DIR}/helpers
 
 usage() {
   echo "Usage:
-  ${0} [gke_cluster_name]  --zone|--region [optional flags]
+  ${0} [gke_cluster_name]  [optional flags]
 
   Creates GKE Cluster by gcloud container cluster create gke_cluster_name 
   
@@ -53,6 +53,7 @@ if [[ -z ${GKE_CLUSTER_NAME} ]]; then
 fi
 
 echo "GKE_CLUSTER_NAME=${GKE_CLUSTER_NAME}"
+export GKE_CLUSTER_NAME
 cf_export GKE_CLUSTER_NAME
 
 gcloud --quiet container clusters create ${GKE_CLUSTER_NAME} $@
@@ -69,4 +70,9 @@ if [[ $? != 0 ]]; then
       err "Failed to get kubeconfig for cluster $GKE_CLUSTER_NAME"
 fi
 
+gcloud container clusters get-credentials $GKE_CLUSTER_NAME
+# Enable cluster-admin role for tls client
+kubectl create clusterrolebinding cluster-admin-tls-client --clusterrole cluster-admin --user client 
+
+kubectl config get-contexts
 cf_export KUBECONFIG
