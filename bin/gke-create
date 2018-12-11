@@ -56,7 +56,10 @@ echo "GKE_CLUSTER_NAME=${GKE_CLUSTER_NAME}"
 export GKE_CLUSTER_NAME
 cf_export GKE_CLUSTER_NAME
 
-gcloud --quiet container clusters create ${GKE_CLUSTER_NAME} $@
+ZONE_PARAM=$(getZoneParam $@ )
+REGION_PARAM=$(getRegionParam $@ )
+
+gcloud --quiet container clusters create ${GKE_CLUSTER_NAME} $ZONE_PARAM $REGION_PARAM $@
 if [[ $? != 0 ]]; then
       err "Failed to create cluster $GKE_CLUSTER_NAME"
 fi
@@ -70,7 +73,7 @@ if [[ $? != 0 ]]; then
       err "Failed to get kubeconfig for cluster $GKE_CLUSTER_NAME"
 fi
 
-gcloud container clusters get-credentials $GKE_CLUSTER_NAME
+gcloud container clusters get-credentials $ZONE_PARAM $REGION_PARAM $GKE_CLUSTER_NAME
 # Enable cluster-admin role for tls client
 kubectl create clusterrolebinding cluster-admin-tls-client --clusterrole cluster-admin --user client 
 
