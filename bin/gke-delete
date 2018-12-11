@@ -29,7 +29,7 @@ fi
 setZoneParam $@ 
 setRegionParam $@
 
-gcloud --quiet container cluster delete ${GKE_CLUSTER_NAME} $ZONE_PARAM $REGION_PARAM $@
+gcloud --quiet container clusters delete ${GKE_CLUSTER_NAME} $ZONE_PARAM $REGION_PARAM $@
 if [[ $? != 0 ]]; then
   err "Failed create cluster"
 fi
