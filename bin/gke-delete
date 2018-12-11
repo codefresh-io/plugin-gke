@@ -26,10 +26,9 @@ if [[ -z ${GKE_CLUSTER_NAME} ]]; then
   err "GKE_CLUSTER_NAME is not set"
 fi
 
-setZoneParam $@ 
-setRegionParam $@
+setZoneRegionParams $@
 
-gcloud --quiet container clusters delete ${GKE_CLUSTER_NAME} $ZONE_PARAM $REGION_PARAM $@
+gcloud --quiet container clusters delete ${GKE_CLUSTER_NAME}  $ZONE_REGION_PARAM $@
 if [[ $? != 0 ]]; then
   err "Failed delete cluster"
 fi

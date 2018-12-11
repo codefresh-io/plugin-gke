@@ -26,6 +26,26 @@ activateServiceAccount() {
 
 }
 
+setZoneRegionParams() {
+	ZONE_CMD_PARAM=$(echo $@ | sed -n -E 's/.*--zone(=| +)(.*) */\2/p')
+	REGION_CMD_PARAM=$(echo $@ | sed -n -E 's/.*--region(=| +)(.*) */\2/p' )
+	if [[ -n "${ZONE_CMD_PARAM}" ]]; then
+	  ZONE_REGION_PARAM="--zone=${ZONE_CMD_PARAM}"
+	elif [[ -n "${CLOUDSDK_COMPUTE_ZONE}" ]]; then
+	  ZONE_REGION_PARAM="--zone=${CLOUDSDK_COMPUTE_ZONE}"
+	fi
+
+    if [[ -z "${ZONE_REGION_PARAM}" ]]; then
+		if [[ -n "${REGION_CMD_PARAM}" ]]; then
+		  ZONE_REGION_PARAM="--region=${REGION_CMD_PARAM}"
+		elif [[ -n "${CLOUDSDK_COMPUTE_REGION}" ]]; then
+		  ZONE_REGION_PARAM="--region=${CLOUDSDK_COMPUTE_REGION}"
+		fi
+	fi
+	echo "ZONE_REGION_PARAM=$ZONE_REGION_PARAM"	
+	export ZONE_REGION_PARAM
+}
+
 setZoneParam() {
 	ZONE_CMD_PARAM=$(echo $@ | sed -n -E 's/.*--zone(=| +)(.*) */\2/p')
 	if [[ -n "${ZONE_CMD_PARAM}" ]]; then
@@ -81,5 +101,5 @@ generateKubeconfig() {
 		]
     }'
 
-	gcloud container clusters describe $GKE_CLUSTER_NAME $ZONE_PARAM $REGION_PARAM --format=json | jq -r "$JQ_QUERY"
+	gcloud container clusters describe $GKE_CLUSTER_NAME $ZONE_REGION_PARAM --format=json | jq -r "$JQ_QUERY"
 }
