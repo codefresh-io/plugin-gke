@@ -6,7 +6,7 @@ source ${DIR}/helpers
 
 usage() {
   echo "Usage:
-  ${0} [gke_cluster_name] [optional flags]
+  ${0} [gke_cluster_name]  --zone|--region [optional flags]
 
   Creates GKE Cluster by gcloud container cluster create gke_cluster_name 
   

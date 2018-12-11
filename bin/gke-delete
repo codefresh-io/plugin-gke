@@ -6,7 +6,7 @@ source ${DIR}/helpers
 
 usage() {
   echo "Usage: 
-  ${0} gke_cluster_name
+  ${0} gke_cluster_name --zone|--region
 
   Deletes GKE Cluster by gcloud container cluster delete gke_cluster_name 
   
@@ -17,12 +17,16 @@ usage() {
 }
 
 activateServiceAccount
+if [[ -n "${1}" && ! "${1}" =~ ^-- ]]; then
+   GKE_CLUSTER_NAME=$1
+   shift
+fi
 
 if [[ -z ${GKE_CLUSTER_NAME} ]]; then
   err "GKE_CLUSTER_NAME is not set"
 fi
 
-gcloud --quiet container cluster delete ${GKE_CLUSTER_NAME}
+gcloud --quiet container cluster delete ${GKE_CLUSTER_NAME} $@
 if [[ $? != 0 ]]; then
   err "Failed create cluster"
 fi
