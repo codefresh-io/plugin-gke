@@ -27,8 +27,8 @@ activateServiceAccount() {
 }
 
 setZoneRegionParams() {
-	ZONE_CMD_PARAM=$(echo $@ | sed -n -E 's/.*--zone(=| +)(.*) */\2/p')
-	REGION_CMD_PARAM=$(echo $@ | sed -n -E 's/.*--region(=| +)(.*) */\2/p' )
+	ZONE_CMD_PARAM=$(echo $@ | sed -n -E 's/.*--zone(=| +)(\S*) ?.*/\2/p')
+	REGION_CMD_PARAM=$(echo $@ | sed -n -E 's/.*--region(=| +)(\S*) ?.*/\2/p' )
 	if [[ -n "${ZONE_CMD_PARAM}" ]]; then
 	  ZONE_REGION_PARAM="--zone=${ZONE_CMD_PARAM}"
 	elif [[ -n "${CLOUDSDK_COMPUTE_ZONE}" ]]; then
