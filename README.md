@@ -24,7 +24,8 @@ Use Codefresh GKE plugin to create GKE Kubernetes cluster for integration tests
 
 * `gke-delete` - deletes GKE Cluster by name on Google Cloud project defined by GOOGLE_SERVICE_ACCOUNT_KEY  
   
-* `kubectl` - you can use it to operate on the created cluster  
+* `kubectl` - you can use it to operate on the created cluster 
+* `gcloud`
 
 ## Usage
 
