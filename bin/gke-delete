@@ -31,7 +31,7 @@ setRegionParam $@
 
 gcloud --quiet container clusters delete ${GKE_CLUSTER_NAME} $ZONE_PARAM $REGION_PARAM $@
 if [[ $? != 0 ]]; then
-  err "Failed create cluster"
+  err "Failed delete cluster"
 fi
 
 echo "Getting kubeconfig"
