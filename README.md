@@ -26,23 +26,26 @@ Use Codefresh GKE plugin to create GKE Kubernetes cluster for integration tests
   - `gcloud container clusters create <GKE_CLUSTER_NAME> <optional parameters>`
   - sets kubectl current context to the newly created cluster for futher pipeline steps
 
-* `gke-delete` - deletes GKE Cluster by name on Google Cloud project defined by GOOGLE_SERVICE_ACCOUNT_KEY  
+* `gke-delete` - deletes GKE Cluster by name on Google Cloud project defined by GOOGLE_SERVICE_ACCOUNT_KEY
   
 * `kubectl` - you can use it to operate on the created cluster 
 * `gcloud`
 
+#### Google Cloud Zone/Region note
+`--zone=<zone>` or `--region=<region>` parameters are mandatory for `gcloud container clusters ...` commands
+By default we are using default zone of us-central1 region
+You can change it by specifying yours `--zone= | --region= ` or using `CLOUDSDK_COMPUTE_ZONE | CLOUDSDK_COMPUTE_ZONE` env vars
+If you specified `--zone= | --region= ` for `gke-create` you must specify the same zone/region parameters for `gke-delete` 
+
 ## Usage
 
-Set environment variable and add the following step to your Codefresh pipeline:
+Set the environment variables and add the following step to your Codefresh pipeline:
 
 ```yaml
 ---
 version: '1.0'
 
 steps:
-
-  ...
-
   # 
   create-cluster:
     image: codefresh/plugin-gke
@@ -61,6 +64,5 @@ steps:
      image: codefresh/plugin-gke
      commands:
         - gke-delete gke-test-cluster-1 --zone=us-central1-a 
-  ...
 
 ```

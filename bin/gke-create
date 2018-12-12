@@ -58,6 +58,7 @@ cf_export GKE_CLUSTER_NAME
 
 setZoneRegionParams $@ 
 
+msg "Creating cluster ${GKE_CLUSTER_NAME} $ZONE_REGION_PARAM"
 gcloud --quiet container clusters create ${GKE_CLUSTER_NAME}  $ZONE_REGION_PARAM $@
 if [[ $? != 0 ]]; then
       err "Failed to create cluster $GKE_CLUSTER_NAME"

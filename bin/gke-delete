@@ -28,6 +28,7 @@ fi
 
 setZoneRegionParams $@
 
+msg "Deleting cluster ${GKE_CLUSTER_NAME} $ZONE_REGION_PARAM"
 gcloud --quiet container clusters delete ${GKE_CLUSTER_NAME}  $ZONE_REGION_PARAM $@
 if [[ $? != 0 ]]; then
   err "Failed delete cluster"
