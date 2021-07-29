@@ -1,4 +1,4 @@
-FROM google/cloud-sdk:227.0.0-alpine
+FROM google/cloud-sdk:alpine
 
 ARG KUBECTL_VERSION="v1.12.3"
 ENV KUBECTL_VERSION=$KUBECTL_VERSION
